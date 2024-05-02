@@ -12,15 +12,19 @@ namespace UserDB.Repository
     public interface IEventRepository<T> where T : Event
     {
 
-        public void setCollectionName(string name);
-        public Task Create(T car);
+        public Task Create(T newEvent);
+
+
         public Task<int> Delete(string id);
-        public Task<T> GetFirst();
-        public Task<User> GetByLogin(string email, string password);
-        public Task<Result> GenerateEmailConfirmationTokenAsync(T user);
-        public Task<Result> ConfirmEmailAsync(T user);
+
+
+        public Task<Event> GetById(string id);
+
+
+        public Task<List<T>> GetEventsByDate(DateTime date);
+
     }
 }
-    
+
 
 

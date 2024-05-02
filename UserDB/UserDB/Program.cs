@@ -18,6 +18,7 @@ using MongoDB.Bson;
 using UserDB.KeyHolder;
 using Microsoft.AspNetCore.Http;
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.UseUrls("http://localhost:5001/");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -33,7 +34,7 @@ builder.Services.AddControllersWithViews();
 var configuration = new ConfigurationBuilder() 
            .AddJsonFile("appsettings.json")
            .Build();
-var keyHolder = new KeyHolder(configuration); //ебучие костыли
+var keyHolder = new KeyHolder(configuration); 
 var authOptions = new AuthOptions(keyHolder);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -42,19 +43,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            // указывает, будет ли валидироваться издатель при валидации токена
+
             ValidateIssuer = true,
-            // строка, представляющая издателя
+
             ValidIssuer = AuthOptions.ISSUER,
-            // будет ли валидироваться потребитель токена
+
             ValidateAudience = true,
-            // установка потребителя токена
+
             ValidAudience = AuthOptions.AUDIENCE,
-            // будет ли валидироваться время существования
+
             ValidateLifetime = true,
-            // установка ключа безопасности
+
             IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-            // валидация ключа безопасности
+
             ValidateIssuerSigningKey = true,
         };
     });

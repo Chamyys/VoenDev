@@ -24,12 +24,14 @@ namespace UserDB.EmailService
                 {
                     await client.AuthenticateAsync("xelperproject@mail.ru", "M3wZ4RgawviCK4042hNa");
 
-                } catch (Exception ex) { }
+                }
+                catch (Exception ex) { }
                 try
                 {
                     await client.SendAsync(emailMessage);
-                } catch (Exception ex) { }
-              
+                }
+                catch (Exception ex) { }
+
                 await client.DisconnectAsync(true);
             }
         }

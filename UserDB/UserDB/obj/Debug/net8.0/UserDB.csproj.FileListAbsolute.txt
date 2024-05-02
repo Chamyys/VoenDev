@@ -104,3 +104,4 @@ C:\Users\Egor\Desktop\Learning\2\KP\NewProject\UserDB\UserDB\bin\Debug\net8.0\pa
 C:\Users\Egor\Desktop\Learning\2\KP\NewProject\UserDB\UserDB\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
 C:\Users\Egor\Desktop\Learning\2\KP\NewProject\UserDB\UserDB\bin\Debug\net8.0\MailKit.dll
 C:\Users\Egor\Desktop\Learning\2\KP\NewProject\UserDB\UserDB\bin\Debug\net8.0\MimeKit.dll
+C:\Users\Egor\Desktop\Learning\2\KP\NewProject\UserDB\UserDB\obj\Debug\net8.0\UserDB.sourcelink.json

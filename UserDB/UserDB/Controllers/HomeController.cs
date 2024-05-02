@@ -18,7 +18,7 @@ using System.Text;
 using System.Security.Cryptography;
 namespace About.Controllers
 {
-     //[Route("/api/[controller]/[action]")]
+    //[Route("/api/[controller]/[action]")]
     public class HomeController : Controller
     {
         private readonly IMongoRepository<User> _mongoRepository;
@@ -28,11 +28,11 @@ namespace About.Controllers
 
         }
 
-        public Result AddNewUser([FromBody]User newUser)
+        public Result AddNewUser([FromBody] User newUser)
         {
 
-          //   User user = new User { Surname = "1", BirthDate = new DateTime(), Email = "TEst", Password = "Password",
-           //      PlaceOfLiving = "das", UserID = "sdome", _id = "some id"//BsonObjectId.GenerateNewId()
+            //   User user = new User { Surname = "1", BirthDate = new DateTime(), Email = "TEst", Password = "Password",
+            //      PlaceOfLiving = "das", UserID = "sdome", _id = "some id"//BsonObjectId.GenerateNewId()
             // };
 
             try
@@ -58,20 +58,20 @@ namespace About.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        public IActionResult Index()
+        public void Index()
         {
-            return View();
+            //return View();
         }
-       
+
         [HttpPost]
-               public IResult Login([FromBody] User? loginData)
+        public IResult Login([FromBody] User? loginData)
         {
 
-           
-            User user = _mongoRepository.GetByLogin(loginData.Email, loginData.Password).Result; 
+            loginData.Password = HashWithSHA256(loginData.Password);
+            User user = _mongoRepository.GetByLogin(loginData.Email, loginData.Password).Result;
             if (user is null || !user.IsEmailConfirmed) return Results.Unauthorized();
 
-            
+
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Email) };
             // создаем JWT-токен
             var jwt = new JwtSecurityToken(
@@ -98,34 +98,40 @@ namespace About.Controllers
             return ("Hello World!");
         }
         [HttpGet]
-        public IActionResult Register()
+        public /*IActionResult*/ void Register()
         {
-            return View();
+            //return View();
+        }
+        public static string HashWithSHA256(string value)
+        {
+            using var hash = SHA256.Create();
+            var byteArray = hash.ComputeHash(Encoding.UTF8.GetBytes(value));
+            return Convert.ToHexString(byteArray);
         }
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] User loginData)
         {
-    
-                var result = AddNewUser(loginData);
-                if (result.IsSuccess)
-                {
-              
+            loginData.Password = HashWithSHA256(loginData.Password);
+            var result = AddNewUser(loginData);
+            if (result.IsSuccess)
+            {
+
                 var code = Encoding.UTF8.GetBytes(loginData.Email).ToString();
-                    var callbackUrl = Url.Action(
-                        "ConfirmEmail",
-                        "Home",
-                        new { email = loginData.Email, code = code, password = loginData.Password },
-                        protocol: HttpContext.Request.Scheme);
-                    EmailService emailService = new EmailService();
-                    await emailService.SendEmailAsync(loginData.Email, "Confirm your account",
-                        $"ѕодтвердите регистрацию, перейд€ по ссылке: <a href='{callbackUrl}'>¬аша уникальна€ ссылка</a>");
+                var callbackUrl = Url.Action(
+                    "ConfirmEmail",
+                    "Home",
+                    new { email = loginData.Email, code = code, password = loginData.Password },
+                    protocol: HttpContext.Request.Scheme);
+                EmailService emailService = new EmailService();
+                await emailService.SendEmailAsync(loginData.Email, "Confirm your account",
+                    $"ѕодтвердите регистрацию, перейд€ по ссылке: <a href='{callbackUrl}'>¬аша уникальна€ ссылка</a>");
                 return View();
-              
+
             }
-               
+
             return View();
         }
-        
+
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string email, string code, string password)
@@ -145,16 +151,16 @@ namespace About.Controllers
             else
                 return View("Error");
         }
-       
-     
-    }
-
-
-
 
 
     }
 
-  
+
+
+
+
+}
+
+
 
 
